@@ -4,8 +4,9 @@
 import React from "react";
 import { Card, Dimmer, Image, Loader, Segment } from "semantic-ui-react";
 import axios from "axios";
+import "./SourceList.css";
 
-const key = "790d923c2bc14b1e85ddbaa3788f7dea";
+const key = "eb5dffd08f0746dd87e861f8f779f06e";
 const source = `https://newsapi.org/v2/sources?apiKey=${key}`;
 
 /** TODO:
@@ -19,7 +20,7 @@ class SourceList extends React.Component {
     super(props);
     this.state = {
       data: [],
-      loading: false,
+      loading: true,
       error: null
     };
   }
@@ -29,12 +30,14 @@ class SourceList extends React.Component {
       .get(source)
       .then(result => {
         this.setState({
-          data: result.data.sources
+          data: result.data.sources,
+          loading: false
         });
       })
       .catch(error => {
         this.setState({
-          error: error.message
+          error: error.message,
+          loading: false
         });
       });
   }
@@ -44,16 +47,17 @@ class SourceList extends React.Component {
     if (loading) {
       return (
         <Segment>
-          <Dimmer active>
+          <Dimmer inverted active>
             <Loader>Loading</Loader>
           </Dimmer>
+          <Image src="https://rawgit.com/ikhsanalatsary/xcidic-news/8db843f7684624356510c7317d231124bd3dc5fe/src/modules/news/paragraph.png" />
         </Segment>
       );
     } else if (error) {
       return <Segment>{error}</Segment>;
     }
     return (
-      <Card.Group stackable itemsPerRow={4}>
+      <Card.Group stackable itemsPerRow={4} className="wrapper">
         {data.map(source => {
           return (
             <Card>
