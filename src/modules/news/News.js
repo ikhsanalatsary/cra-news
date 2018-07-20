@@ -3,11 +3,19 @@
 
 import React from "react";
 import axios from "axios";
-import { Card, Dimmer, Icon, Image, Loader, Segment } from "semantic-ui-react";
+import {
+  Card,
+  Dimmer,
+  Icon,
+  Image,
+  Loader,
+  Pagination,
+  Segment
+} from "semantic-ui-react";
 // import qs from "querystringify";
 
-const apiKey = "a72e90d6a98d4bb8b8f2b1c41af558a2";
-const source = `https://newsapi.org/v2/top-headlines?country=id&apiKey=${apiKey}`;
+const apiKey = "1f2cdf48810f4fbf85545466e10892c5";
+const source = `https://newsapi.org/v2/everything?q=apple&from=2018-07-19&to=2018-07-19&sortBy=popularity&apiKey=${apiKey}`;
 
 /** TODO:
  * membuat basic component `Card`.
@@ -21,18 +29,28 @@ class News extends React.Component {
     this.state = {
       data: [],
       loading: true,
-      error: null
+      error: null,
+      total: 0,
+      activePage: 1
     };
+    this.handlePaginationChange = this.handlePaginationChange.bind(this);
+    this.fetchNews = this.fetchNews.bind(this);
   }
 
   componentDidMount() {
+    this.fetchNews();
+  }
+
+  fetchNews() {
+    const { activePage: page } = this.state;
     axios
-      .get(source)
+      .get(`${source}&page=${page}`)
       .then(result => {
-        // console.log(result);
+        console.log(result);
         this.setState({
           data: result.data.articles,
-          loading: false
+          loading: false,
+          total: result.data.totalResults
         });
       })
       .catch(error => {
@@ -42,11 +60,41 @@ class News extends React.Component {
         });
       });
   }
+
+  renderNews(article, i) {
+    return (
+      <Card key={i}>
+        <Image
+          src={
+            article.urlToImage ||
+            "https://rawgit.com/ikhsanalatsary/xcidic-news/8db843f7684624356510c7317d231124bd3dc5fe/src/modules/news/image.png"
+          }
+        />
+        <Card.Content>
+          <Card.Header>{article.title}</Card.Header>
+          <Card.Meta>
+            <span className="date">{article.publishedAt.toLocaleString()}</span>
+          </Card.Meta>
+          <Card.Description>{article.description}</Card.Description>
+        </Card.Content>
+        <Card.Content extra>
+          <Icon name="user" />
+          {article.author || "None"}
+        </Card.Content>
+      </Card>
+    );
+  }
+
+  handlePaginationChange(e, { activePage }) {
+    this.setState({ activePage, loading: true }, this.fetchNews);
+  }
+
   render() {
     // console.log(this.state);
-    const { data, loading, error } = this.state;
+    const { activePage, data, loading, error, total } = this.state;
+    let content = null;
     if (loading) {
-      return (
+      content = (
         <Segment>
           <Dimmer inverted active>
             <Loader>Loading</Loader>
@@ -55,36 +103,24 @@ class News extends React.Component {
         </Segment>
       );
     } else if (error) {
-      return <Segment>{error}</Segment>;
+      content = <Segment>{error}</Segment>;
+    } else {
+      content = (
+        <Card.Group stackable itemsPerRow={4} style={{ marginBottom: 15 }}>
+          {data.map(this.renderNews)}
+        </Card.Group>
+      );
     }
+
     return (
-      <Card.Group stackable itemsPerRow={4} className="wrapper">
-        {data.map((article, i) => {
-          return (
-            <Card key={i}>
-              <Image
-                src={
-                  article.urlToImage ||
-                  "https://rawgit.com/ikhsanalatsary/xcidic-news/8db843f7684624356510c7317d231124bd3dc5fe/src/modules/news/image.png"
-                }
-              />
-              <Card.Content>
-                <Card.Header>{article.title}</Card.Header>
-                <Card.Meta>
-                  <span className="date">
-                    {article.publishedAt.toLocaleString()}
-                  </span>
-                </Card.Meta>
-                <Card.Description>{article.description}</Card.Description>
-              </Card.Content>
-              <Card.Content extra>
-                <Icon name="user" />
-                {article.author || "None"}
-              </Card.Content>
-            </Card>
-          );
-        })}
-      </Card.Group>
+      <React.Fragment>
+        {content}
+        <Pagination
+          activePage={activePage}
+          totalPages={total}
+          onPageChange={this.handlePaginationChange}
+        />
+      </React.Fragment>
     );
   }
 }
