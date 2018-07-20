@@ -15,6 +15,8 @@ import {
 import moment from "moment";
 // import qs from "querystringify";
 
+import NewsItem from "./components/NewsItem";
+
 const apiKey = "0797e75da548421fb4847b975c3534b9";
 const source = `https://newsapi.org/v2/everything?q=apple&from=2018-07-19&to=2018-07-19&sortBy=popularity&apiKey=${apiKey}`;
 
@@ -23,6 +25,7 @@ const source = `https://newsapi.org/v2/everything?q=apple&from=2018-07-19&to=201
  * request data dari newsapi.org
  * kemudian update komponen dengan data yang sudah didapat
  * pagination feature
+ * pisahkann komponen list berita
  */
 class News extends React.Component {
   constructor(props) {
@@ -63,29 +66,7 @@ class News extends React.Component {
   }
 
   renderNews(article, i) {
-    return (
-      <Card key={i}>
-        <Image
-          src={
-            article.urlToImage ||
-            "https://rawgit.com/ikhsanalatsary/xcidic-news/8db843f7684624356510c7317d231124bd3dc5fe/src/modules/news/image.png"
-          }
-        />
-        <Card.Content>
-          <Card.Header>{article.title}</Card.Header>
-          <Card.Meta>
-            <span className="date">
-              {moment(article.publishedAt).format("LL")}
-            </span>
-          </Card.Meta>
-          <Card.Description>{article.description}</Card.Description>
-        </Card.Content>
-        <Card.Content extra>
-          <Icon name="user" />
-          {article.author || "None"}
-        </Card.Content>
-      </Card>
-    );
+    return <NewsItem key={i} article={article} />;
   }
 
   handlePaginationChange(e, { activePage }) {
