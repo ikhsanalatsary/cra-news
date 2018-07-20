@@ -12,9 +12,10 @@ import {
   Pagination,
   Segment
 } from "semantic-ui-react";
+import moment from "moment";
 // import qs from "querystringify";
 
-const apiKey = "1f2cdf48810f4fbf85545466e10892c5";
+const apiKey = "0797e75da548421fb4847b975c3534b9";
 const source = `https://newsapi.org/v2/everything?q=apple&from=2018-07-19&to=2018-07-19&sortBy=popularity&apiKey=${apiKey}`;
 
 /** TODO:
@@ -73,7 +74,9 @@ class News extends React.Component {
         <Card.Content>
           <Card.Header>{article.title}</Card.Header>
           <Card.Meta>
-            <span className="date">{article.publishedAt.toLocaleString()}</span>
+            <span className="date">
+              {moment(article.publishedAt).format("LL")}
+            </span>
           </Card.Meta>
           <Card.Description>{article.description}</Card.Description>
         </Card.Content>
