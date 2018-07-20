@@ -6,7 +6,7 @@ import axios from "axios";
 import { Card, Dimmer, Icon, Image, Loader, Segment } from "semantic-ui-react";
 // import qs from "querystringify";
 
-const apiKey = "36741dc75e684042b9ffc793b4761dbe";
+const apiKey = "a72e90d6a98d4bb8b8f2b1c41af558a2";
 const source = `https://newsapi.org/v2/top-headlines?country=id&apiKey=${apiKey}`;
 
 /** TODO:
@@ -29,7 +29,7 @@ class News extends React.Component {
     axios
       .get(source)
       .then(result => {
-        console.log(result);
+        // console.log(result);
         this.setState({
           data: result.data.articles,
           loading: false
@@ -59,9 +59,9 @@ class News extends React.Component {
     }
     return (
       <Card.Group stackable itemsPerRow={4} className="wrapper">
-        {data.map(article => {
+        {data.map((article, i) => {
           return (
-            <Card>
+            <Card key={i}>
               <Image
                 src={
                   article.urlToImage ||

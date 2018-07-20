@@ -12,6 +12,7 @@ function App() {
     <Container>
       <Menu />
       <News />
+      <SourceList />
     </Container>
   );
 }

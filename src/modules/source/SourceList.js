@@ -6,7 +6,7 @@ import { Card, Dimmer, Image, Loader, Segment } from "semantic-ui-react";
 import axios from "axios";
 import "./SourceList.css";
 
-const key = "eb5dffd08f0746dd87e861f8f779f06e";
+const key = "a72e90d6a98d4bb8b8f2b1c41af558a2";
 const source = `https://newsapi.org/v2/sources?apiKey=${key}`;
 
 /** TODO:
@@ -29,6 +29,7 @@ class SourceList extends React.Component {
     axios
       .get(source)
       .then(result => {
+        // console.log(result);
         this.setState({
           data: result.data.sources,
           loading: false
@@ -60,7 +61,7 @@ class SourceList extends React.Component {
       <Card.Group stackable itemsPerRow={4} className="wrapper">
         {data.map(source => {
           return (
-            <Card>
+            <Card key={source.id}>
               <img
                 src="https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"
                 width="100%"
