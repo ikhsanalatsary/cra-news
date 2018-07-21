@@ -4,9 +4,10 @@
 import React from "react";
 import { Card, Dimmer, Image, Loader, Segment } from "semantic-ui-react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import "./SourceList.css";
 
-const key = "a72e90d6a98d4bb8b8f2b1c41af558a2";
+const key = "e859950d43bc4623875f34a9361a0e24";
 const source = `https://newsapi.org/v2/sources?apiKey=${key}`;
 
 /** TODO:
@@ -29,7 +30,7 @@ class SourceList extends React.Component {
     axios
       .get(source)
       .then(result => {
-        // console.log(result);
+        console.log(result);
         this.setState({
           data: result.data.sources,
           loading: false
@@ -61,7 +62,7 @@ class SourceList extends React.Component {
       <Card.Group stackable itemsPerRow={4} className="wrapper">
         {data.map(source => {
           return (
-            <Card key={source.id}>
+            <Card key={source.id} as={Link} to={`/source/${source.id}`}>
               <img
                 src="https://s3.amazonaws.com/uifaces/faces/twitter/adhamdannaway/128.jpg"
                 width="100%"

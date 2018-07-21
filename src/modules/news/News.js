@@ -17,8 +17,8 @@ import moment from "moment";
 
 import NewsItem from "./components/NewsItem";
 
-const apiKey = "0797e75da548421fb4847b975c3534b9";
-const source = `https://newsapi.org/v2/everything?q=apple&from=2018-07-19&to=2018-07-19&sortBy=popularity&apiKey=${apiKey}`;
+const apiKey = "e859950d43bc4623875f34a9361a0e24";
+const source = `https://newsapi.org/v2/everything?language=en&apiKey=${apiKey}`;
 
 /** TODO:
  * membuat basic component `Card`.
@@ -35,7 +35,8 @@ class News extends React.Component {
       loading: true,
       error: null,
       total: 0,
-      activePage: 1
+      activePage: 1,
+      sources: this.props.match.params.sourceId
     };
     this.handlePaginationChange = this.handlePaginationChange.bind(this);
     this.fetchNews = this.fetchNews.bind(this);
@@ -46,9 +47,9 @@ class News extends React.Component {
   }
 
   fetchNews() {
-    const { activePage: page } = this.state;
+    const { activePage: page, sources } = this.state;
     axios
-      .get(`${source}&page=${page}`)
+      .get(`${source}&page=${page}&sources={sources}`)
       .then(result => {
         console.log(result);
         this.setState({
@@ -74,7 +75,7 @@ class News extends React.Component {
   }
 
   render() {
-    // console.log(this.state);
+    console.log(this.props);
     const { activePage, data, loading, error, total } = this.state;
     let content = null;
     if (loading) {
